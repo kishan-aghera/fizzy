@@ -8,5 +8,6 @@ servers:
 env:
   clear:
     ARTENANT: test
+    WEB_CONCURRENCY: 16
 
 proxy: false
