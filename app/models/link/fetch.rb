@@ -1,8 +1,12 @@
 class Link::Fetch
   class Error < StandardError; end
+
   class TooManyRedirectsError < Error; end
+
   class RedirectDeniedError < Error; end
+
   class BodyTooLargeError < Error; end
+
   class UnsuccesfulRequestError < Error
     attr_reader :response
 

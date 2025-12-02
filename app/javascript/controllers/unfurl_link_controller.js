@@ -19,7 +19,7 @@ export default class extends Controller {
   }
 
   setUpBasecampIntegration() {
-    this.#openPopup(this.setUpBasecampIntegrationUrlValue, { widht: 400, height: 600 })
+    this.#openPopup(this.setUpBasecampIntegrationUrlValue, { width: 400, height: 600 })
   }
 
   closePrompt(event) {
@@ -65,9 +65,9 @@ export default class extends Controller {
 
   #handleError({ error, ...data }) {
     switch (error) {
-      case "basecamp_integration_not_set_up":
-        if (this.#shouldShowAccountLinkingPrompt()) {
-          this.#promptBasecampIntegrationSetUp()
+      case "unfurler_requires_setup":
+        if (this.#shouldShowUnfurlerSetupPrompt()) {
+          this.#promptUnfurlerSetUp(data.config)
         }
         break;
       default:
@@ -76,7 +76,7 @@ export default class extends Controller {
     }
   }
 
-  #promptBasecampIntegrationSetUp() {
+  #promptUnfurlerSetUp() {
     this.linkAccountsPromptTarget.hidden = false
   }
 
@@ -97,13 +97,13 @@ export default class extends Controller {
     this.#accountLinkingDismissed = true
   }
 
-  #shouldShowAccountLinkingPrompt() {
+  #shouldShowUnfurlerSetupPrompt() {
     const dismissalCount = this.#cookie.get(this.constructor.DISMISSAL_COUNTER_KEY) || 0
     return !this.#accountLinkingDismissed && (dismissalCount < this.constructor.MAX_DISMISSAL_COUNT)
   }
 
   get #cookie() {
-    const name = `link-accounts-prompt-${Current.user.id}`
+    const name = `link-unfurler-setup-prompt`
     return Cookie.find(name) || new Cookie(name)
   }
 }

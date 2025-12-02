@@ -10,6 +10,14 @@ class Link::OpenGraphUnfurler
     @user = user
   end
 
+  def requires_setup?
+    false
+  end
+
+  def setup_config
+    nil
+  end
+
   def unfurl
     fetch = Link::Fetch.new(uri)
 

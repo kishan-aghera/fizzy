@@ -4,25 +4,30 @@ class Link
     BasecampUnfurler
   ]
 
-  attr_reader :uri, :metadata
+  attr_reader :uri, :metadata, :user
 
   def self.unfurl(url, **options)
     new(url).unfurl(**options)
   end
 
-  def initialize(url)
+  def initialize(url, user: Current.user)
     @uri = URI.parse(url)
     @metadata = nil
+    @user = user
   end
 
-  def unfurl(**options)
-    options[:user] = Current.user unless options.key?(:user)
-    unfurler = UNFURLERS.find { |unfurler| unfurler.unfurls?(uri) }
-
-    if unfurler
-      @metadata = unfurler.new(uri, **options).unfurl
+  def unfurl
+    if unfurler&.setup?
+      @metadata = unfurler.unfurl
     end
 
     self
+  end
+
+  def unfurler
+    @unfurler ||= begin
+      unfurler = UNFURLERS.find { |unfurler| unfurler.unfurls?(uri) }
+      unfurler&.new(uri, user: user)
+    end
   end
 end

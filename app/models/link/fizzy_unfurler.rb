@@ -27,6 +27,14 @@ class Link::FizzyUnfurler
     @user = user
   end
 
+  def requires_setup?
+    false
+  end
+
+  def setup_config
+    nil
+  end
+
   def unfurl
     tenant, path = extract_tenant_from_path(uri.path)
 

@@ -4,13 +4,15 @@ class UnfurlLinksController < ApplicationController
   def create
     link = Link.unfurl(url_param)
 
-    if link.metadata
+    if link.unfurler.requires_setup?
+      render \
+        json: { error: :unfurler_requires_setup, config: link.unfurler.setup_config }, 
+        status: :unprocessable_entity
+    elsif link.metadata
       render json: link.metadata
     else
       head :no_content
     end
-  rescue Link::BasecampUnfurler::MissingIntegrationError
-    render json: { error: :basecamp_integration_not_set_up }, status: :unprocessable_entity
   end
 
   private
